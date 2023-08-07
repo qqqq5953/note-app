@@ -40,8 +40,10 @@ export default function Home({ notes }: HomeProps) {
         <Row className="mt-4">
           {notes.map((note: Note) => {
             return (
-              <Col key={note.id} xs={12} md={6} lg={3} xl={4}>
-                <Card note={note} />
+              <Col key={note.id} xs={12} md={6} lg={3} xl={4} className="mb-4">
+                <Link to={`${note.id}`} className="text-decoration-none">
+                  <Card note={note} />
+                </Link>
               </Col>
             )
           })}

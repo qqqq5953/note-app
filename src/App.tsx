@@ -3,6 +3,7 @@ import { Outlet, Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
 import NewNote from './pages/NewNote'
 import useLocalStorage from './hooks/useLocalStorage'
+import NoteContent from './components/NoteContent'
 
 export type Note = {
   id: string
@@ -28,6 +29,7 @@ function App() {
         <Route index element={<Home notes={notes} />}></Route>
         <Route path="/new" element={<NewNote setNotes={setNotes} />}></Route>
         <Route path="/:id" element={<Layout />}>
+          <Route index element={<NoteContent notes={notes} />}></Route>
           <Route path="edit" element={<Edit />}></Route>
         </Route>
       </Routes>
@@ -40,7 +42,6 @@ export default App
 function Layout() {
   return (
     <>
-      <h1>Layout</h1>
       <Outlet></Outlet>
     </>
   )
