@@ -2,15 +2,13 @@ import NoteInput from '../components/NoteInput'
 import { Note } from '../App'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
+import { NotesContext } from '../context/NoteContext'
+import { useContext } from 'react'
 
-type EditProps = {
-  notes: Note[]
-  setNotes: (value: Note[] | ((prev: Note[]) => Note[])) => void
-}
-
-export default function Edit({ setNotes, notes }: EditProps) {
-  const { id } = useParams()
+export default function Edit() {
   const navigate = useNavigate()
+  const { id } = useParams()
+  const { notes, setNotes } = useContext(NotesContext)
   const note = notes.find((note) => note.id === id)
 
   function editNote(note: Note) {

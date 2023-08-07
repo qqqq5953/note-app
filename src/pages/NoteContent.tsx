@@ -1,18 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Row, Col, Button, Badge, Stack } from 'react-bootstrap'
 import { Link, useParams, useNavigate } from 'react-router-dom'
-import { Note } from '../App'
 import ReactMarkdown from 'react-markdown'
 import Alert from '../components/Alert'
+import { NotesContext } from '../context/NoteContext'
+import { useContext } from 'react'
 
-type NoteContentProps = {
-  notes: Note[]
-  setNotes: (value: Note[] | ((prev: Note[]) => Note[])) => void
-}
-
-export default function NoteContent({ notes, setNotes }: NoteContentProps) {
+export default function NoteContent() {
   const navigate = useNavigate()
   const { id } = useParams()
+  const { notes, setNotes } = useContext(NotesContext)
   const note = notes.find((note) => note.id === id)
   const [show, setShow] = useState<boolean>(false)
 

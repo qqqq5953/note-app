@@ -1,20 +1,21 @@
-import { FormEvent, useRef, useState, useMemo, useEffect } from 'react'
+import {
+  FormEvent,
+  useRef,
+  useState,
+  useMemo,
+  useEffect,
+  useContext
+} from 'react'
 import { Row, Col, Form, Stack, Button } from 'react-bootstrap'
 import { MultiValue } from 'react-select'
 import CreatableSelect from 'react-select/creatable'
 import { Tag, Note } from '../App'
 import { v4 as uuidv4 } from 'uuid'
-import useLocalStorage from '../hooks/useLocalStorage'
 import { useNavigate } from 'react-router-dom'
-
-type ReactSelectTags = {
-  value: string
-  label: string
-}
+import { NotesContext } from '../context/NoteContext'
 
 type NoteInputProps = {
   note?: Note
-  //   setNotes: (value: Note[] | ((prev: Note[]) => Note[])) => void
   submit: (note: Note) => void
 }
 
@@ -22,7 +23,8 @@ export default function NoteInput({ note, submit }: NoteInputProps) {
   const titleRef = useRef<HTMLInputElement>(null)
   const markdownRef = useRef<HTMLTextAreaElement>(null)
   const [selectedTags, setSelectedTags] = useState<Tag[]>([])
-  const [tags, setTags] = useLocalStorage<ReactSelectTags[]>('tags', [])
+
+  const { tags, setTags } = useContext(NotesContext)
 
   const navigate = useNavigate()
 
@@ -52,7 +54,7 @@ export default function NoteInput({ note, submit }: NoteInputProps) {
 
   function createTag(inputValue: string) {
     const id = uuidv4()
-    setTags((prev: Tag[]) => [...prev, { value: id, label: inputValue }])
+    setTags((prev) => [...prev, { value: id, label: inputValue }])
     setSelectedTags((prev) => [...prev, { id, label: inputValue }])
   }
 

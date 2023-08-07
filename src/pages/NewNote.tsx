@@ -1,11 +1,11 @@
 import NoteInput from '../components/NoteInput'
 import { Note } from '../App'
+import { NotesContext } from '../context/NoteContext'
+import { useContext } from 'react'
 
-type NewNoteProps = {
-  setNotes: (value: Note[] | ((prev: Note[]) => Note[])) => void
-}
+export default function NewNote() {
+  const { setNotes } = useContext(NotesContext)
 
-export default function NewNote({ setNotes }: NewNoteProps) {
   function createNote(note: Note) {
     setNotes((prev) => [...prev, note])
   }

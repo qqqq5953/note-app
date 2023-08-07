@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom'
 import CreatableSelect from 'react-select/creatable'
 import { Note } from '../App'
 import Card from '../components/Card'
+import { NotesContext } from '../context/NoteContext'
+import { useContext } from 'react'
 
-type HomeProps = {
-  notes: Note[]
-}
+export default function Home() {
+  const { notes } = useContext(NotesContext)
 
-export default function Home({ notes }: HomeProps) {
   return (
     <>
       <Row className="align-items-center">
