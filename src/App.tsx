@@ -4,7 +4,7 @@ import Home from './pages/Home'
 import NewNote from './pages/NewNote'
 import Edit from './pages/Edit'
 import useLocalStorage from './hooks/useLocalStorage'
-import NoteContent from './components/NoteContent'
+import NoteContent from './pages/NoteContent'
 
 export type Note = {
   id: string
@@ -30,7 +30,10 @@ function App() {
         <Route index element={<Home notes={notes} />}></Route>
         <Route path="/new" element={<NewNote setNotes={setNotes} />}></Route>
         <Route path="/:id" element={<Layout />}>
-          <Route index element={<NoteContent notes={notes} />}></Route>
+          <Route
+            index
+            element={<NoteContent notes={notes} setNotes={setNotes} />}
+          ></Route>
           <Route
             path="edit"
             element={<Edit setNotes={setNotes} notes={notes} />}
