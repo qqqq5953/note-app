@@ -2,6 +2,7 @@ import { Container } from 'react-bootstrap'
 import { Outlet, Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
 import NewNote from './pages/NewNote'
+import Edit from './pages/Edit'
 import useLocalStorage from './hooks/useLocalStorage'
 import NoteContent from './components/NoteContent'
 
@@ -30,7 +31,10 @@ function App() {
         <Route path="/new" element={<NewNote setNotes={setNotes} />}></Route>
         <Route path="/:id" element={<Layout />}>
           <Route index element={<NoteContent notes={notes} />}></Route>
-          <Route path="edit" element={<Edit />}></Route>
+          <Route
+            path="edit"
+            element={<Edit setNotes={setNotes} notes={notes} />}
+          ></Route>
         </Route>
       </Routes>
     </Container>
@@ -43,13 +47,6 @@ function Layout() {
   return (
     <>
       <Outlet></Outlet>
-    </>
-  )
-}
-function Edit() {
-  return (
-    <>
-      <h1>Edit</h1>
     </>
   )
 }

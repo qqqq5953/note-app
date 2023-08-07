@@ -22,7 +22,7 @@ export default function Home({ notes }: HomeProps) {
           </div>
         </Col>
       </Row>
-      notes:{JSON.stringify(notes)}
+
       <main>
         <Form>
           <Row>
