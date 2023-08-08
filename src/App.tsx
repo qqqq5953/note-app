@@ -26,6 +26,10 @@ export type ReactSelectTags = {
   label: string
 }
 
+export type TagsMap = {
+  [key in ReactSelectTags['value']]: ReactSelectTags['label']
+}
+
 function App() {
   return (
     <NotesProvider>

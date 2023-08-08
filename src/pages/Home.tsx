@@ -1,13 +1,20 @@
 import { Row, Col, Button, Form } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import CreatableSelect from 'react-select/creatable'
-import { Note } from '../App'
+import { Note, TagsMap } from '../App'
 import Card from '../components/Card'
 import { NotesContext } from '../context/NoteContext'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
+import EditTags from '../components/EditTags'
 
 export default function Home() {
-  const { notes } = useContext(NotesContext)
+  const { notes, tags } = useContext(NotesContext)
+  const [isEditTags, setIsEditTags] = useState<boolean>(false)
+
+  const tagsObj = tags.reduce((obj: TagsMap, tag) => {
+    obj[tag.value] = tag.label
+    return obj
+  }, {})
 
   return (
     <>
@@ -18,10 +25,17 @@ export default function Home() {
             <Link to="/new">
               <Button>Create</Button>
             </Link>
-            <Button variant="outline-secondary">Edit Tags</Button>
+            <Button
+              variant="outline-secondary"
+              onClick={() => setIsEditTags(true)}
+            >
+              Edit Tags
+            </Button>
           </div>
         </Col>
       </Row>
+
+      <EditTags show={isEditTags} handleCancel={() => setIsEditTags(false)} />
 
       <main>
         <Form>
@@ -42,7 +56,7 @@ export default function Home() {
             return (
               <Col key={note.id} xs={12} md={6} lg={3} xl={4} className="mb-4">
                 <Link to={`${note.id}`} className="text-decoration-none">
-                  <Card note={note} />
+                  <Card note={note} tagsObj={tagsObj} />
                 </Link>
               </Col>
             )
