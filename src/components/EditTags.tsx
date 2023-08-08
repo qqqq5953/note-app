@@ -25,6 +25,10 @@ export default function EditTags({ show, handleCancel }: EditTags) {
     })
   }
 
+  function deleteTag(id: string) {
+    setTags((prev) => prev.filter((tag) => tag.value !== id))
+  }
+
   return (
     <>
       <Modal show={show} onHide={handleCancel}>
@@ -41,7 +45,12 @@ export default function EditTags({ show, handleCancel }: EditTags) {
                     value={tag.label}
                     onChange={(e) => editTag(e, tag.value)}
                   />
-                  <Button variant="outline-danger">x</Button>
+                  <Button
+                    variant="outline-danger"
+                    onClick={() => deleteTag(tag.value)}
+                  >
+                    x
+                  </Button>
                 </Stack>
               )
             })}

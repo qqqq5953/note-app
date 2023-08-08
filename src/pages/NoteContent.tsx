@@ -48,7 +48,9 @@ export default function NoteContent() {
               <Button variant="outline-danger" onClick={() => setShow(true)}>
                 Delete
               </Button>
-              <Button variant="outline-secondary">Edit Tags</Button>
+              <Link to="/">
+                <Button variant="outline-secondary"> Back</Button>
+              </Link>
             </div>
           </Col>
 
