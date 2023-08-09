@@ -3,13 +3,12 @@ import { Row, Col, Button, Badge, Stack } from 'react-bootstrap'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import Alert from '../components/Alert'
-import { NotesContext } from '../context/NoteContext'
-import { useContext } from 'react'
+import useNotes from '../hooks/useNotes'
 
 export default function NoteContent() {
   const navigate = useNavigate()
   const { id } = useParams()
-  const { notes, setNotes } = useContext(NotesContext)
+  const { notes, setNotes, tagsObj } = useNotes()
   const note = notes.find((note) => note.id === id)
   const [show, setShow] = useState<boolean>(false)
 
@@ -34,8 +33,8 @@ export default function NoteContent() {
             <h1>{note.title}</h1>
             <div>
               <Stack direction="horizontal" gap={2}>
-                {note.tags.map((tag) => {
-                  return <Badge key={tag.id}>{tag.label}</Badge>
+                {note.tags.map((tagId) => {
+                  return <Badge key={tagId}>{tagsObj[tagId]}</Badge>
                 })}
               </Stack>
             </div>

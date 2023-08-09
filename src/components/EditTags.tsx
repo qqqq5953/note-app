@@ -1,6 +1,6 @@
-import { FormEvent, useContext } from 'react'
+import { ChangeEvent } from 'react'
 import { Modal, Stack, Form, Button } from 'react-bootstrap'
-import { NotesContext } from '../context/NoteContext'
+import useNotes from '../hooks/useNotes'
 
 type EditTags = {
   show: boolean
@@ -8,15 +8,15 @@ type EditTags = {
 }
 
 export default function EditTags({ show, handleCancel }: EditTags) {
-  const { tags, setTags } = useContext(NotesContext)
+  const { tags, setTags } = useNotes()
 
-  function editTag(e: FormEvent, id: string) {
+  function editTag(e: ChangeEvent<HTMLInputElement>, id: string) {
     setTags((prev) => {
       return prev.map((tag) => {
         if (tag.value === id) {
           return {
             value: tag.value,
-            label: (e.target as HTMLInputElement).value
+            label: e.target.value
           }
         } else {
           return tag
@@ -37,13 +37,15 @@ export default function EditTags({ show, handleCancel }: EditTags) {
         </Modal.Header>
         <Modal.Body>
           <Stack gap={3}>
-            {tags.map((tag, i) => {
+            {tags.map((tag) => {
               return (
                 <Stack direction="horizontal" gap={3} key={tag.value}>
                   <Form.Control
                     type="text"
                     value={tag.label}
-                    onChange={(e) => editTag(e, tag.value)}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      editTag(e, tag.value)
+                    }
                   />
                   <Button
                     variant="outline-danger"

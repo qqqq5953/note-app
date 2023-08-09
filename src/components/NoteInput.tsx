@@ -1,18 +1,11 @@
-import {
-  FormEvent,
-  useRef,
-  useState,
-  useMemo,
-  useEffect,
-  useContext
-} from 'react'
+import { FormEvent, useRef, useState, useMemo, useEffect } from 'react'
 import { Row, Col, Form, Stack, Button } from 'react-bootstrap'
 import { MultiValue } from 'react-select'
 import CreatableSelect from 'react-select/creatable'
-import { Tag, Note } from '../App'
+import { Note } from '../App'
 import { v4 as uuidv4 } from 'uuid'
 import { useNavigate } from 'react-router-dom'
-import { NotesContext } from '../context/NoteContext'
+import useNotes from '../hooks/useNotes'
 
 type NoteInputProps = {
   note?: Note
@@ -20,13 +13,12 @@ type NoteInputProps = {
 }
 
 export default function NoteInput({ note, submit }: NoteInputProps) {
+  const navigate = useNavigate()
+  const { tags, setTags, tagsObj } = useNotes()
+
   const titleRef = useRef<HTMLInputElement>(null)
   const markdownRef = useRef<HTMLTextAreaElement>(null)
-  const [selectedTags, setSelectedTags] = useState<Tag[]>([])
-
-  const { tags, setTags } = useContext(NotesContext)
-
-  const navigate = useNavigate()
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
 
   function submitForm(e: FormEvent) {
     e.preventDefault()
@@ -39,14 +31,12 @@ export default function NoteInput({ note, submit }: NoteInputProps) {
       return
     }
 
-    const newNote: Note = {
+    const newNote = {
       title: titleRef.current!.value,
       markdown: markdownRef.current!.value,
       tags: selectedTags,
       id: note ? note.id : uuidv4()
     }
-
-    console.log('newNote', newNote)
 
     submit(newNote)
     navigate('/')
@@ -55,24 +45,17 @@ export default function NoteInput({ note, submit }: NoteInputProps) {
   function createTag(inputValue: string) {
     const id = uuidv4()
     setTags((prev) => [...prev, { value: id, label: inputValue }])
-    setSelectedTags((prev) => [...prev, { id, label: inputValue }])
+    setSelectedTags((prev) => [...prev, id])
   }
 
   const reactSelectTags = useMemo(() => {
-    return selectedTags.map((tag) => {
-      return { value: tag.id, label: tag.label }
+    return selectedTags.map((tagId) => {
+      return { value: tagId, label: tagsObj[tagId] }
     })
   }, [selectedTags])
 
   function selectTags(items: MultiValue<{ value: string; label: string }>) {
-    setSelectedTags(
-      items.map((item) => {
-        return {
-          id: item.value,
-          label: item.label
-        }
-      })
-    )
+    setSelectedTags(items.map((item) => item.value))
   }
 
   useEffect(() => {

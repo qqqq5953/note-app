@@ -1,5 +1,5 @@
 import { createContext, ReactNode } from 'react'
-import { Note, ReactSelectTags } from '../App'
+import { Note, ReactSelectTags, TagsMap } from '../App'
 import useLocalStorage from '../hooks/useLocalStorage'
 
 type NotesContext = {
@@ -9,17 +9,22 @@ type NotesContext = {
   setTags: (
     value: ReactSelectTags[] | ((prev: ReactSelectTags[]) => ReactSelectTags[])
   ) => void
+  tagsObj: TagsMap
 }
-
-export const NotesContext = createContext({} as NotesContext)
 
 type NotesProviderProps = {
   children: ReactNode
 }
 
+export const NotesContext = createContext({} as NotesContext)
+
 export default function NotesProvider({ children }: NotesProviderProps) {
   const [notes, setNotes] = useLocalStorage<Note[]>('note', [])
   const [tags, setTags] = useLocalStorage<ReactSelectTags[]>('tags', [])
+  const tagsObj = tags.reduce((obj: TagsMap, tag: TagsMap) => {
+    obj[tag.value] = tag.label
+    return obj
+  }, {})
 
   return (
     <NotesContext.Provider
@@ -27,7 +32,8 @@ export default function NotesProvider({ children }: NotesProviderProps) {
         notes,
         setNotes,
         tags,
-        setTags
+        setTags,
+        tagsObj
       }}
     >
       {children}

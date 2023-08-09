@@ -13,7 +13,7 @@ export type Note = {
 export type NoteData = {
   title: string
   markdown: string
-  tags: Tag[]
+  tags: Tag['id'][]
 }
 
 export type Tag = {

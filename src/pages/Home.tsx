@@ -1,20 +1,49 @@
 import { Row, Col, Button, Form } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import CreatableSelect from 'react-select/creatable'
-import { Note, TagsMap } from '../App'
+import { TagsMap, ReactSelectTags } from '../App'
 import Card from '../components/Card'
-import { NotesContext } from '../context/NoteContext'
-import { useContext, useState } from 'react'
 import EditTags from '../components/EditTags'
+import useNotes from '../hooks/useNotes'
+import { useMemo, useState } from 'react'
 
 export default function Home() {
-  const { notes, tags } = useContext(NotesContext)
-  const [isEditTags, setIsEditTags] = useState<boolean>(false)
+  const { notes, tags, tagsObj } = useNotes()
+  const [isEditTags, setIsEditTags] = useState(false)
+  const [filteredTitle, setFilteredTitle] = useState('')
+  const [filteredTags, setFilteredTags] = useState<ReactSelectTags[]>([])
 
-  const tagsObj = tags.reduce((obj: TagsMap, tag) => {
-    obj[tag.value] = tag.label
-    return obj
-  }, {})
+  const filteredNotes = useMemo(() => {
+    if (!filteredTitle && filteredTags.length === 0) return notes
+
+    const tagObj = filteredTags.reduce((obj: TagsMap, item) => {
+      obj[item.value] = item.label
+      return obj
+    }, {})
+
+    if (filteredTitle && filteredTags.length === 0) {
+      return notes.filter((note) => {
+        return note.title
+          .toLocaleLowerCase()
+          .includes(filteredTitle.toLocaleLowerCase())
+      })
+    }
+
+    if (!filteredTitle && filteredTags.length !== 0) {
+      return notes.filter((note) => {
+        return note.tags.some((tagId) => tagObj[tagId] != undefined)
+      })
+    }
+
+    return notes.filter((note) => {
+      const noteCondition = note.title
+        .toLocaleLowerCase()
+        .includes(filteredTitle.toLocaleLowerCase())
+      const tagCondition = note.tags.some((tagId) => tagObj[tagId] != undefined)
+
+      return noteCondition && tagCondition
+    })
+  }, [filteredTitle, filteredTags])
 
   return (
     <>
@@ -42,17 +71,25 @@ export default function Home() {
           <Row>
             <Form.Group as={Col} xs={12} md={6} controlId="title">
               <Form.Label>Title</Form.Label>
-              <Form.Control type="text" />
+              <Form.Control
+                type="text"
+                value={filteredTitle}
+                onChange={(e) => setFilteredTitle(e.target.value)}
+              />
             </Form.Group>
             <Form.Group as={Col} xs={12} md={6} controlId="tags">
               <Form.Label>Tags</Form.Label>
-              <CreatableSelect isMulti />
+              <CreatableSelect
+                isMulti
+                options={tags}
+                onChange={(items) => setFilteredTags([...items])}
+              />
             </Form.Group>
           </Row>
         </Form>
 
         <Row className="mt-4">
-          {notes.map((note: Note) => {
+          {filteredNotes.map((note) => {
             return (
               <Col key={note.id} xs={12} md={6} lg={3} xl={4} className="mb-4">
                 <Link to={`${note.id}`} className="text-decoration-none">

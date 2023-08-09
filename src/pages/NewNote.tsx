@@ -1,10 +1,9 @@
 import NoteInput from '../components/NoteInput'
 import { Note } from '../App'
-import { NotesContext } from '../context/NoteContext'
-import { useContext } from 'react'
+import useNotes from '../hooks/useNotes'
 
 export default function NewNote() {
-  const { setNotes } = useContext(NotesContext)
+  const { setNotes } = useNotes()
 
   function createNote(note: Note) {
     setNotes((prev) => [...prev, note])

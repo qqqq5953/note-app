@@ -1,5 +1,5 @@
 import { Card as CardBS, Badge, Stack } from 'react-bootstrap'
-import { Note, Tag, TagsMap } from '../App'
+import { Note, TagsMap } from '../App'
 
 type CardProps = {
   note: Note
@@ -14,8 +14,8 @@ export default function Card({ note, tagsObj }: CardProps) {
       </CardBS.Header>
       <CardBS.Body>
         <Stack direction="horizontal" gap={2}>
-          {note.tags.map((tag: Tag) => {
-            return <Badge key={tag.id}>{tagsObj[tag.id]}</Badge>
+          {note.tags.map((tagId) => {
+            return <Badge key={tagId}>{tagsObj[tagId]}</Badge>
           })}
         </Stack>
       </CardBS.Body>
